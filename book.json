@@ -1,0 +1,42 @@
+{
+  "title": "CrystalSupply Documentation",
+  "description": "Complete guide to CrystalSupply - Fair, decentralized TAL mining on Monad",
+  "author": "CrystalSupply Team",
+  "language": "en",
+  "plugins": [
+    "theme-default",
+    "fontsettings",
+    "sharing",
+    "search",
+    "prism",
+    "-highlight",
+    "github",
+    "copy-code-button",
+    "expandable-chapters",
+    "page-toc-button",
+    "back-to-top-button"
+  ],
+  "pluginsConfig": {
+    "github": {
+      "url": "https://github.com/crystalsupply/crystalsupply"
+    },
+    "sharing": {
+      "facebook": false,
+      "twitter": true,
+      "all": ["twitter", "telegram"]
+    },
+    "fontsettings": {
+      "theme": "white",
+      "family": "sans",
+      "size": 2
+    }
+  },
+  "variables": {
+    "tokenName": "Crystal",
+    "tokenTicker": "TAL",
+    "maxSupply": "21,000,000",
+    "blockchain": "Monad",
+    "initialReward": "32",
+    "halvingInterval": "3,000,000"
+  }
+}
