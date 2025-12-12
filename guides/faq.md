@@ -20,8 +20,6 @@ CrystalSupply is built on **Monad**, a high-performance EVM-compatible blockchai
 - ❌ No investor rounds
 - ✅ Pure fair launch
 
-The only exception is 105,000 TAL initial circulating supply used for bootstrapping liquidity.
-
 ### How is CrystalSupply different from ORE?
 
 | Feature | ORE (Solana) | CrystalSupply (Monad) |

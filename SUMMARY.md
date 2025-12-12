@@ -1,26 +1,26 @@
 # Table of Contents
 
-## Getting Started
+## Introduction
 
-* [Introduction](README.md)
+* [Welcome to CrystalSupply](README.md)
 * [What is CrystalSupply?](getting-started/introduction.md)
-* [Quick Start](getting-started/quick-start.md)
-* [Setup Your Wallet](getting-started/wallet-setup.md)
+* [Quick Start Guide](getting-started/quick-start.md)
 
-## Fundamentals
+## Protocol Fundamentals
 
+* [Overview](fundamentals/README.md)
 * [How Mining Works](fundamentals/mining.md)
 * [Tokenomics](fundamentals/tokenomics.md)
 
-## User Guides
+## Guides
 
+* [Overview](guides/README.md)
 * [Staking Guide](guides/staking.md)
 * [FAQ](guides/faq.md)
 
-## Technical Documentation
+## Technical Reference
 
-* [Smart Contracts Overview](technical/contracts.md)
-
-## Resources
-
-* [Glossary](resources/glossary.md)
+* [Overview](technical/README.md)
+* [Smart Contracts](technical/contracts.md)
+* [Contract Addresses](technical/addresses.md)
+* [Glossary](technical/glossary.md)

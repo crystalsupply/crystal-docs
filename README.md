@@ -1,6 +1,6 @@
-# Welcome to CrystalSupply
+# CrystalSupply Documentation
 
-CrystalSupply is a decentralized mining protocol on the Monad blockchain that introduces a fair and transparent way to mine Crystal (TAL) tokens through a gamified proof-of-work mechanism.
+Welcome to the official documentation for CrystalSupply - a fair, decentralized mining protocol on Monad blockchain.
 
 ## What is CrystalSupply?
 

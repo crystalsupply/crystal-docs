@@ -10,7 +10,7 @@ Crystal (TAL) is designed with a deflationary, Bitcoin-inspired economic model t
 | **Ticker** | TAL |
 | **Max Supply** | 21,000,000 TAL |
 | **Decimals** | 18 |
-| **Initial Circulating** | 105,000 TAL |
+| **Initial Circulating** | 0 TAL |
 | **Blockchain** | Monad (EVM) |
 
 ## Supply Distribution
@@ -38,8 +38,6 @@ Total Supply: 21,000,000 TAL
 - ❌ No airdrops
 - ✅ Pure fair launch
 
-The only exception is 105,000 TAL initial circulating supply, which is used to bootstrap initial liquidity and will be mined into existence at protocol deployment.
-
 ## Emission Schedule
 
 CrystalSupply uses a **halving mechanism** inspired by Bitcoin to create scarcity over time.
@@ -57,15 +55,13 @@ CrystalSupply uses a **halving mechanism** inspired by Bitcoin to create scarcit
 
 | Halving Era | Reward per Round | Total TAL Minted | Cumulative Supply |
 |-------------|------------------|------------------|-------------------|
-| **Era 0** | 32 TAL | 3,000,000 | 3,105,000 |
-| **Era 1** | 16 TAL | 3,000,000 | 6,105,000 |
-| **Era 2** | 8 TAL | 3,000,000 | 9,105,000 |
-| **Era 3** | 4 TAL | 3,000,000 | 12,105,000 |
-| **Era 4** | 2 TAL | 3,000,000 | 15,105,000 |
-| **Era 5** | 1 TAL | 3,000,000 | 18,105,000 |
-| **Era 6** | 0.5 TAL | Until max supply | 21,000,000 |
-
-*Note: Cumulative supply includes 105,000 initial circulating*
+| **Epoch 0** | 32 TAL | 3,000,000 | 3,000,000 |
+| **Epoch 1** | 16 TAL | 3,000,000 | 6,000,000 |
+| **Epoch 2** | 8 TAL | 3,000,000 | 9,000,000 |
+| **Epoch 3** | 4 TAL | 3,000,000 | 12,000,000 |
+| **Epoch 4** | 2 TAL | 3,000,000 | 15,000,000 |
+| **Epoch 5** | 1 TAL | 3,000,000 | 18,000,000 |
+| **Epoch 6** | 0.5 TAL | Until max supply | 21,000,000 |
 
 ### Visual Emission Curve
 

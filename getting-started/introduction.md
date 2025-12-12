@@ -43,9 +43,7 @@ Unlike many projects, CrystalSupply has **NO pre-mine, NO team allocation, and N
 | Minable Supply | 21,000,000 TAL | 100% |
 | Pre-mine | 0 TAL | 0% |
 | Team Allocation | 0 TAL | 0% |
-| Initial Circulating | 105,000 TAL | 0.5% |
-
-*Note: The 105,000 initial circulating supply is used to bootstrap liquidity and will be mined into existence at protocol launch.*
+| Initial Circulating | 0 TAL | 0.0% |
 
 ## Why CrystalSupply?
 

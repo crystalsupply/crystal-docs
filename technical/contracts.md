@@ -9,26 +9,26 @@ CrystalSupply is built on a suite of smart contracts deployed on the Monad block
 │         CrystalSupply Ecosystem                 │
 ├─────────────────────────────────────────────────┤
 │                                                 │
-│  ┌──────────────────┐                          │
-│  │  Crystal.sol     │◄────────┐                │
-│  │  (TAL Token)     │         │ mint()         │
-│  └────────┬─────────┘         │                │
-│           │                   │                │
-│           │ transfer()  ┌─────┴──────────────┐ │
-│           │             │                    │ │
-│           ▼             │  CrystalSupply.sol │ │
-│  ┌──────────────────┐  │  (Mining Engine)   │ │
-│  │ CrystalStaking   │  │                    │ │
-│  │ Comp.sol         │◄─┤ - prospect()       │ │
-│  │ (Auto-Compound)  │  │ - checkpoint()     │ │
-│  └────────┬─────────┘  │ - claim()          │ │
-│           │            └─────────┬──────────┘ │
-│           │                      │            │
-│           │                      │            │
-│  ┌────────▼────────┐   ┌────────▼──────────┐ │
-│  │  DEX Liquidity  │   │  Pyth Entropy V2  │ │
-│  │  Pools          │   │  (VRF Oracle)     │ │
-│  └─────────────────┘   └───────────────────┘ │
+│  ┌──────────────────┐                           │
+│  │  Crystal.sol     │◄────────┐                 │
+│  │  (TAL Token)     │         │ mint()          │
+│  └────────┬─────────┘         │                 │
+│           │                   │                 │
+│           │ transfer()  ┌─────┴──────────────┐  │
+│           │             │                    │  │
+│           ▼             │  CrystalSupply.sol │  │
+│  ┌──────────────────┐  │  (Mining Engine)   │   │
+│  │ CrystalStaking   │  │                    │   │
+│  │ Comp.sol         │◄─┤ - prospect()       │   │
+│  │ (Auto-Compound)  │  │ - checkpoint()     │   │
+│  └────────┬─────────┘  │ - claim()          │   │
+│           │            └─────────┬──────────┘   │
+│           │                      │              │
+│           │                      │              │
+│  ┌────────▼────────┐   ┌────────▼──────────┐    │
+│  │  DEX Liquidity  │   │  Pyth Entropy V2  │    │
+│  │  Pools          │   │  (VRF Oracle)     │    │
+│  └─────────────────┘   └───────────────────┘    │
 │                                                 │
 └─────────────────────────────────────────────────┘
 ```
@@ -213,60 +213,6 @@ CrystalSupply.sol
         └─► Finalize round with winning block
 ```
 
-## Security Features
-
-### Access Control
-
-All contracts use OpenZeppelin's `Ownable` for admin functions:
-
-```solidity
-// Only owner can set critical parameters
-function setMinter(address _minter) external onlyOwner
-
-// Only minter can mint TAL
-function mint(address to, uint256 amount) external {
-    require(msg.sender == minter, "Not minter");
-    // ...
-}
-```
-
-### Reentrancy Protection
-
-All state-changing functions use `nonReentrant` modifier:
-
-```solidity
-function prospect(uint256 roundId, uint8 blockIdx, uint256 amount)
-    external
-    payable
-    nonReentrant
-{
-    // Safe from reentrancy attacks
-}
-```
-
-### Integer Overflow Protection
-
-Solidity ^0.8.19 has built-in overflow protection:
-
-```solidity
-// Automatically reverts on overflow/underflow
-uint256 total = amount1 + amount2;
-```
-
-### Input Validation
-
-All functions validate inputs:
-
-```solidity
-function prospect(uint256 roundId, uint8 blockIdx, uint256 amount) external {
-    require(roundId == currentRoundId, "Invalid round");
-    require(blockIdx < GRID_SIZE, "Invalid block");
-    require(amount >= MIN_STAKE, "Below minimum");
-    require(!isRolling, "Round ended");
-    // ...
-}
-```
-
 ## Upgradability
 
 CrystalSupply contracts are **NOT upgradeable**. This design choice ensures:
@@ -283,197 +229,3 @@ CrystalSupply contracts are **NOT upgradeable**. This design choice ensures:
 - **Migration**: Users would need to migrate to new contracts
 
 This trade-off prioritizes security and decentralization over flexibility.
-
-## Gas Optimization
-
-### Efficient Data Structures
-
-```solidity
-// Packed structs to save storage
-struct Round {
-    uint256 monTotalOfLosingBlocks;  // 1 slot
-    uint256 monTotalOnWinningBlock;  // 1 slot
-    uint256 totalRoundStake;         // 1 slot
-    uint8 winningBlock;              // \
-    bool finalized;                  //  } 1 slot (packed)
-    bool motherlodeHit;              // /
-    // ...
-}
-```
-
-### Batch Operations
-
-```solidity
-// Keepers can checkpoint multiple rounds at once
-function checkpointMultiple(address user, uint256[] calldata roundIds) external {
-    for (uint i = 0; i < roundIds.length; i++) {
-        _checkpoint(user, roundIds[i]);
-    }
-}
-```
-
-### View Functions
-
-Heavy calculations done in view functions (free):
-
-```solidity
-function getCurrentReward() public view returns (uint256) {
-    uint256 totalMinted = crystalToken.totalSupply() - INITIAL_CIRCULATING;
-    uint256 halvingsPassed = totalMinted / HALVING_INTERVAL;
-    if (halvingsPassed >= MAX_HALVINGS) {
-        return INITIAL_REWARD / (2 ** MAX_HALVINGS);
-    }
-    return INITIAL_REWARD / (2 ** halvingsPassed);
-}
-```
-
-## Events
-
-All contracts emit comprehensive events for off-chain tracking:
-
-### CrystalSupply Events
-
-```solidity
-event Prospect(address indexed user, uint256 roundId, uint8 blockIdx, uint256 amount);
-event RoundEnded(uint256 roundId, uint8 winBlock, bool winnerTakeAll, bool motherlode);
-event CheckpointedByKeeper(address indexed keeper, address indexed user, uint256 roundId, uint256 tokens, uint256 mon, uint256 keeperFee);
-event Claimed(address indexed user, uint256 monAmt, uint256 tokenAmt);
-event RoundStarted(uint256 indexed roundId, uint256 timestamp);
-```
-
-### Crystal Events
-
-```solidity
-event MinterUpdated(address indexed oldMinter, address indexed newMinter);
-event Transfer(address indexed from, address indexed to, uint256 value);
-event Approval(address indexed owner, address indexed spender, uint256 value);
-```
-
-### Staking Events
-
-```solidity
-event Deposited(address indexed user, uint256 amount, uint256 sharesIssued, uint256 newBalance);
-event Withdrawn(address indexed user, uint256 amount, uint256 sharesBurned, uint256 newBalance, uint256 rewardsEarned);
-event RewardsDistributed(uint256 amount, uint256 newTotalPooled);
-```
-
-## Testing
-
-All contracts should have comprehensive test coverage:
-
-### Unit Tests
-
-```solidity
-// test/CrystalSupply.t.sol
-function testProspect() public {
-    vm.prank(user1);
-    crystalSupply.prospect{value: 1 ether}(1, 0, 1 ether);
-
-    assertEq(crystalSupply.userBlockDeposits(1, user1, 0), 1 ether);
-}
-```
-
-### Integration Tests
-
-```solidity
-function testFullMiningRound() public {
-    // Users prospect
-    // Round ends
-    // Randomness received
-    // Winners claim rewards
-    // Verify balances
-}
-```
-
-### Fuzzing Tests
-
-```solidity
-function testFuzzProspect(uint256 amount) public {
-    vm.assume(amount >= MIN_STAKE && amount <= 100 ether);
-    // Test with random amounts
-}
-```
-
-## Audit Status
-
-**Status:** Pending audit
-
-**Scope:**
-- Crystal.sol
-- CrystalSupply.sol
-- CrystalStakingComp.sol
-- All associated libraries
-
-**Auditor:** TBD
-
-Check [Audit Reports](../resources/audits.md) for latest status.
-
-## Contract Addresses
-
-**Network:** Monad Mainnet
-
-| Contract | Address |
-|----------|---------|
-| Crystal (TAL) | `TBD` |
-| CrystalSupply | `TBD` |
-| CrystalStakingComp | `TBD` |
-| ProtocolVault | `TBD` |
-| AdminWallet | `TBD` |
-
-See [Contract Addresses](addresses.md) for full list.
-
-## Source Code
-
-All contracts are open source and available on GitHub:
-
-**Repository:** [Coming Soon]
-
-**License:** MIT
-
-**Verified Contracts:** All contracts will be verified on Monad block explorer
-
-## Development
-
-### Building Contracts
-
-```bash
-# Install dependencies
-npm install
-
-# Compile contracts
-npx hardhat compile
-
-# Run tests
-npx hardhat test
-
-# Deploy (testnet)
-npx hardhat run scripts/deploy.js --network monad-testnet
-```
-
-### Local Development
-
-```bash
-# Start local node
-npx hardhat node
-
-# Deploy locally
-npx hardhat run scripts/deploy.js --network localhost
-
-# Run tests
-npx hardhat test
-```
-
-## Next Steps
-
-Explore detailed documentation for each contract:
-
-- [Crystal Token (TAL)](crystal-token.md)
-- [CrystalSupply Contract](crystal-supply.md)
-- [Staking Contract](staking-contract.md)
-- [Pyth Entropy Integration](entropy.md)
-
-Or dive into:
-
-- [Integration Guide](../advanced/integration.md)
-- [Security Considerations](../advanced/security.md)
-- [Contract Addresses](addresses.md)
